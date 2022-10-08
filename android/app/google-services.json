@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "757790279070",
+    "project_id": "talk-world-d106c",
+    "storage_bucket": "talk-world-d106c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757790279070:android:1a8fabcd563c25d5bc028f",
+        "android_client_info": {
+          "package_name": "com.vokernos.talk_world"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "757790279070-cigoq5n8606mndiibl233sfgm4ithn1v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxFDW9IqfnygwtbhQUNNS5YJH8y1rUW5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "757790279070-cigoq5n8606mndiibl233sfgm4ithn1v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "757790279070-gm28h91aqv1n3tvo6fk5ihb0p1cqgkku.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.talk.talkWorld"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
