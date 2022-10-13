@@ -34,93 +34,103 @@ class _LoginState extends State<Login> {
     double h = MediaQuery.of(context).size.height;
     return MaterialApp(
       scaffoldMessengerKey: Utils1.messengerKey1,
-      home: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: Form(
-            key: formkey,
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(height: h*.13),
-                  Image.asset(
-                    'assets/images/logo.png',
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.width / 2,
-                  ),
-                  SizedBox(height: h*.05),
-                  CustomTextField(
-                    text: 'Email',
-                    icon: FontAwesomeIcons.solidEnvelope,
-                    hide: false,
-                    controller: emailController,
-                    validator: (email) =>
-                        email != null && !EmailValidator.validate(email)
-                            ? 'Enter a valid email'
-                            : null,
-                  ),
-                  SizedBox(height: h*.04),
-                  CustomTextField(
-                    text: 'Password',
-                    icon: FontAwesomeIcons.lock,
-                    hide: true,
-                    controller: passwordController,
-                    validator: (password) =>
-                        password != null && password.length < 6
-                            ? 'Enter min. 6 characters'
-                            : null,
-                  ),
-                  SizedBox(height: h*.08),
-                  CustomButton(text: 'Login', onPressed: () => signIn()),
-                  SizedBox(height: h*.01),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'Forgot');
-                    },
-                    child: Text(
-                      'Forgot Password?',
-                      style: GoogleFonts.lato(
-                          textStyle: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 17,
-                        color: Colors.red,
-                      )),
-                    ),
-                  ),
-                  SizedBox(height: h*.08),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      home: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage('assets/images/background.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: false,
+            body: Form(
+              key: formkey,
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        'New here?',
-                        style: GoogleFonts.lato(
-                            textStyle: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
-                          color: kBlackColor,
-                        )),
+                      SizedBox(height: h*.13),
+                      Image.asset(
+                      'assets/images/logo.png',
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.width / 2,
                       ),
+                      SizedBox(height: h*.05),
+                      CustomTextField(
+                        text: 'Email',
+                        icon: FontAwesomeIcons.solidEnvelope,
+                        hide: false,
+                        controller: emailController,
+                        validator: (email) =>
+                            email != null && !EmailValidator.validate(email)
+                                ? 'Enter a valid email'
+                                : null,
+                      ),
+                      SizedBox(height: h*.04),
+                      CustomTextField(
+                        text: 'Password',
+                        icon: FontAwesomeIcons.lock,
+                        hide: true,
+                        controller: passwordController,
+                        validator: (password) =>
+                            password != null && password.length < 6
+                                ? 'Enter min. 6 characters'
+                                : null,
+                      ),
+                      SizedBox(height: h*.08),
+                      CustomButton(text: 'Login', onPressed: () => signIn()),
+                      SizedBox(height: h*.01),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, registerPageRoute);
+                          Navigator.pushNamed(context, 'Forgot');
                         },
                         child: Text(
-                          'Register',
+                          'Forgot Password?',
                           style: GoogleFonts.lato(
                               textStyle: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 17,
-                            color: kBlueColor,
+                            color: Colors.red,
                           )),
                         ),
                       ),
+                      SizedBox(height: h*.08),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'New here?',
+                            style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 17,
+                              color: Colors.white,
+                            )),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, registerPageRoute);
+                            },
+                            child: Text(
+                              'Register',
+                              style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 17,
+                                color: kBlueColor,
+                              )),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-          )),
+            )),
+      ),
     );
   }
 

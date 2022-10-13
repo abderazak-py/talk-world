@@ -22,7 +22,6 @@ class _RegisterState extends State<Register> {
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
 
-
   @override
   void dispose() {
     emailController.dispose();
@@ -37,91 +36,106 @@ class _RegisterState extends State<Register> {
     double w = MediaQuery.of(context).size.width;
     return MaterialApp(
       scaffoldMessengerKey: Utils2.messengerKey2,
-      home: Scaffold(
-          body: Form(
-        key: formkey,
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-              SizedBox(height: h*.1),
-              Image.asset(
-                'assets/images/logo.png',
-                width: w*.5,
-                height: w*.5,
-              ),
-              SizedBox(height: h*.05),
-              CustomTextField(
-                text: 'Name',
-                icon: FontAwesomeIcons.solidUser,
-                hide: false,
-                controller: nameController,
-                validator: (name) =>
-                name != null && name.length < 3
-                    ? 'Enter a name'
-                    : name!.length > 40? 'name should be less than 40 char' : null,
-              ),
-              SizedBox(height: h*.027),
-              CustomTextField(
-                text: 'Email',
-                icon: FontAwesomeIcons.solidEnvelope,
-                hide: false,
-                controller: emailController,
-                validator: (email) =>
-                    email != null && !EmailValidator.validate(email)
-                        ? 'Enter a valid email'
-                        : null,
-              ),
-              SizedBox(height: h*.027),
-              CustomTextField(
-                text: 'Password',
-                icon: FontAwesomeIcons.lock,
-                hide: true,
-                controller: passwordController,
-                validator: (password) => password != null && password.length < 6
-                    ? 'Enter min. 6 characters'
-                    : null,
-              ),
-              SizedBox(height: h*.05),
-              CustomButton(
-                text: 'Register',
-                onPressed: () {
-                  register();
-                },
-              ),
-              SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Have account?',
-                    style: GoogleFonts.lato(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 17,
-                      color: kBlackColor,
-                    )),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                    Navigator.pop(context);
-                  }, child: Text(
-                    'Login',
-                    style: GoogleFonts.lato(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
-                          color: kBlueColor,
-                        )),
-                  ),),
-                ],
-              ),
-              SizedBox(height: h*.1),
-          ],
+      home: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/background.jpg'),
+            fit: BoxFit.cover,
+          ),
         ),
-            ),
-      )),
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Form(
+              key: formkey,
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(height: h * .1),
+                      Image.asset(
+                        'assets/images/logo.png',
+                        width: w * .5,
+                        height: w * .5,
+                      ),
+                      SizedBox(height: h * .05),
+                      CustomTextField(
+                        text: 'Name',
+                        icon: FontAwesomeIcons.solidUser,
+                        hide: false,
+                        controller: nameController,
+                        validator: (name) => name != null && name.length < 3
+                            ? 'Enter a name'
+                            : name!.length > 40
+                                ? 'name should be less than 40 char'
+                                : null,
+                      ),
+                      SizedBox(height: h * .027),
+                      CustomTextField(
+                        text: 'Email',
+                        icon: FontAwesomeIcons.solidEnvelope,
+                        hide: false,
+                        controller: emailController,
+                        validator: (email) =>
+                            email != null && !EmailValidator.validate(email)
+                                ? 'Enter a valid email'
+                                : null,
+                      ),
+                      SizedBox(height: h * .027),
+                      CustomTextField(
+                        text: 'Password',
+                        icon: FontAwesomeIcons.lock,
+                        hide: true,
+                        controller: passwordController,
+                        validator: (password) =>
+                            password != null && password.length < 6
+                                ? 'Enter min. 6 characters'
+                                : null,
+                      ),
+                      SizedBox(height: h * .05),
+                      CustomButton(
+                        text: 'Register',
+                        onPressed: () {
+                          register();
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Have account?',
+                            style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 17,
+                              color: Colors.white,
+                            )),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Login',
+                              style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 17,
+                                color: kBlueColor,
+                              )),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: h*.1,)
+                    ],
+                  ),
+                ),
+              ),
+            )),
+      ),
     );
   }
 
@@ -137,17 +151,20 @@ class _RegisterState extends State<Register> {
     );
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim()).then((value) => add());
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: emailController.text.trim(),
+              password: passwordController.text.trim())
+          .then((value) => add());
     } on FirebaseAuthException catch (e) {
       Utils2.showSnackBar(e.message);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
-  add(){
+
+  add() {
     final user = FirebaseAuth.instance.currentUser;
     user!.updateDisplayName(nameController.text.trim());
-     Navigator.pop(context);
+    Navigator.pop(context);
   }
 }

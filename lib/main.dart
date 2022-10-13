@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:talk_world/Screens/ChatPage.dart';
 import 'package:talk_world/Screens/ForgotPassword.dart';
 import 'package:talk_world/Screens/Login.dart';
 import 'package:talk_world/Screens/Onboarding.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:talk_world/Screens/ProfilePage.dart';
 import 'package:talk_world/Screens/Register.dart';
+import 'package:talk_world/Screens/WorldsList.dart';
 import 'package:talk_world/component/consts.dart';
 import 'firebase_options.dart';
 
@@ -51,7 +51,6 @@ class SignInOrNot extends StatelessWidget {
         loginPageRoute : (context) => Login(),
         registerPageRoute : (context) => Register(),
         forgotPageRoute : (context) => ForgotPassword(),
-        chatPageRoute : (context) => ChatPage(),
         profilePageRoute : (context) => ProfilePage(),
       },
       home: Scaffold(
@@ -62,7 +61,7 @@ class SignInOrNot extends StatelessWidget {
               return Center(child: CircularProgressIndicator());
             }
             else if (snapshot.hasData) {
-              return ChatPage();
+              return WorldsList();
             } else {
               return Login();
             }

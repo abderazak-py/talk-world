@@ -36,91 +36,103 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
     return MaterialApp(
       scaffoldMessengerKey: Utils4.messengerKey4,
-      home: Scaffold(
-          resizeToAvoidBottomInset : false,
-          body: Form(
-            key: formkey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 50),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 30),
-                    TextButton(onPressed: () {
-                      Navigator.pop(context);
-                      },
-                        child: Row(
+      home: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage('assets/images/background.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+            body: Form(
+              key: formkey,
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(FontAwesomeIcons.circleLeft, color: kBlueColor,size: 20),
-                            SizedBox(width: 3,),
-                            Text(
-                              'Back',
-                              style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 20,
-                                    color: kBlueColor,
-                                  )),
-                            ),
+                            SizedBox(width: 30),
+                            TextButton(onPressed: () {
+                              Navigator.pop(context);
+                              },
+                                child: Row(
+                                  children: [
+                                    Icon(FontAwesomeIcons.circleLeft, color: kBlueColor,size: 20),
+                                    SizedBox(width: 3,),
+                                    Text(
+                                      'Back',
+                                      style: GoogleFonts.lato(
+                                          textStyle: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20,
+                                            color: kBlueColor,
+                                          )),
+                                    ),
+                                  ],
+                                )),
                           ],
-                        )),
-                  ],
+                        ),
+                        Image.asset(
+                          'assets/images/logo.png',
+                          width: w*.4,
+                          height: w*.4,
+                        ),
+                        SizedBox(height: h*.04),
+                        CustomTextField(
+                          text: 'Change your name',
+                          icon: FontAwesomeIcons.solidUser,
+                          hide: false,
+                          controller: nameController,
+                          validator: (name) =>
+                          name!.isNotEmpty && name.trim().length < 3
+                              ? 'Enter a name'
+                              : null,
+                        ),
+                        SizedBox(height: h*.04),
+                        CustomTextField(
+                          text: 'Change email',
+                          icon: FontAwesomeIcons.solidEnvelope,
+                          hide: false,
+                          controller: emailController,
+                          validator: (email) =>
+                          email!.isNotEmpty && !EmailValidator.validate(email)
+                              ? 'Enter a valid email'
+                              : null,
+                        ),
+                        SizedBox(height: h*.04),
+                        CustomTextField(
+                          text: 'Change password',
+                          icon: FontAwesomeIcons.lock,
+                          hide: true,
+                          controller: passwordController,
+                          validator: (password) =>
+                          password!.isNotEmpty && password.length < 6
+                              ? 'Enter min. 6 characters'
+                              : null,
+                        ),
+                        SizedBox(height: h*.1),
+                        CustomButton(
+                          text: 'Update',
+                          onPressed: () {
+                            update();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                SizedBox(height: 20),
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.width / 2,
-                ),
-                SizedBox(height: 40),
-                CustomTextField(
-                  text: 'Change your name',
-                  icon: FontAwesomeIcons.solidUser,
-                  hide: false,
-                  controller: nameController,
-                  validator: (name) =>
-                  name!.isNotEmpty && name.trim().length < 3
-                      ? 'Enter a name'
-                      : null,
-                ),
-                SizedBox(height: 30),
-                CustomTextField(
-                  text: 'Change email',
-                  icon: FontAwesomeIcons.solidEnvelope,
-                  hide: false,
-                  controller: emailController,
-                  validator: (email) =>
-                  email!.isNotEmpty && !EmailValidator.validate(email)
-                      ? 'Enter a valid email'
-                      : null,
-                ),
-                SizedBox(height: 30),
-                CustomTextField(
-                  text: 'Change password',
-                  icon: FontAwesomeIcons.lock,
-                  hide: true,
-                  controller: passwordController,
-                  validator: (password) =>
-                  password!.isNotEmpty && password.length < 6
-                      ? 'Enter min. 6 characters'
-                      : null,
-                ),
-                Spacer(flex: 1),
-                CustomButton(
-                  text: 'Update',
-                  onPressed: () {
-                    update();
-                  },
-                ),
-                SizedBox(height: 15),
-                Spacer(flex: 2),
-              ],
-            ),
-          )),
+              ),
+            )),
+      ),
     );
   }
   Future update() async {

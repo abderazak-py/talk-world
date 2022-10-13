@@ -31,65 +31,73 @@ class _LoginState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return MaterialApp(
       scaffoldMessengerKey: Utils3.messengerKey3,
-      home: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: Form(
-            key: formkey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Spacer(flex: 1),
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.width / 2,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(50.0),
-                  child: Text(
-                    'Send email to reset your password.',
-                    textAlign: TextAlign.start,
+      home: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage('assets/images/background.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: false,
+            body: Form(
+              key: formkey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(flex: 1),
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.width / 2,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(50.0),
+                    child: Text(
+                      'Send email to reset your password.',
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 25,
+                            color: Colors.white,
+                          )),
+                    ),
+                  ),
+                  CustomTextField(
+                    text: 'Email',
+                    icon: FontAwesomeIcons.solidEnvelope,
+                    hide: false,
+                    controller: emailController,
+                    validator: (email) =>
+                    email != null && !EmailValidator.validate(email)
+                        ? 'Enter a valid email'
+                        : null,
+                  ),
+                  SizedBox(height: 60),
+                  CustomButton(
+                      text: 'Reset',
+                      onPressed: () {
+                        forgotPassword();
+                      }),
+                  SizedBox(height: 20),
+                  TextButton(onPressed: (){
+                    Navigator.pop(context);
+                    },
+                    child: Text(
+                    'back to login Screen?',
                     style: GoogleFonts.lato(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 25,
-                          color: kBlackColor,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17,
+                          color: kBlueColor,
                         )),
-                  ),
-                ),
-                CustomTextField(
-                  text: 'Email',
-                  icon: FontAwesomeIcons.solidEnvelope,
-                  hide: false,
-                  controller: emailController,
-                  validator: (email) =>
-                  email != null && !EmailValidator.validate(email)
-                      ? 'Enter a valid email'
-                      : null,
-                ),
-                SizedBox(height: 60),
-                CustomButton(
-                    text: 'Reset',
-                    onPressed: () {
-                      forgotPassword();
-                    }),
-                SizedBox(height: 20),
-                TextButton(onPressed: (){
-                  Navigator.pop(context);
-                  },
-                  child: Text(
-                  'back to login Screen?',
-                  style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 17,
-                        color: kBlueColor,
-                      )),
-                ),),
-                Spacer(flex: 2)
-              ],
-            ),
-          )),
+                  ),),
+                  Spacer(flex: 2)
+                ],
+              ),
+            )),
+      ),
     );
   }
 
