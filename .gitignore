@@ -1,5 +1,12 @@
 ### ------------------------- Flutter.gitignore ------------------------ ###
 
+windows/
+macos/
+web/
+test/
+linux/
+/lib/firebase_options.dart
+
 # Miscellaneous
 *.class
 #*.lock
