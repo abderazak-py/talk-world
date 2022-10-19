@@ -28,7 +28,6 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -36,12 +35,13 @@ class _LoginState extends State<Login> {
       scaffoldMessengerKey: Utils1.messengerKey1,
       home: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/background.jpg'),
+          image: DecorationImage(
+            image: AssetImage('assets/images/background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: false,
             body: Form(
               key: formkey,
@@ -51,13 +51,13 @@ class _LoginState extends State<Login> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(height: h*.13),
+                      SizedBox(height: h * .13),
                       Image.asset(
-                      'assets/images/logo.png',
-                      width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.width / 2,
+                        'assets/images/logo.png',
+                        width: MediaQuery.of(context).size.width / 2,
+                        height: MediaQuery.of(context).size.width / 2,
                       ),
-                      SizedBox(height: h*.05),
+                      SizedBox(height: h * .05),
                       CustomTextField(
                         text: 'Email',
                         icon: FontAwesomeIcons.solidEnvelope,
@@ -68,7 +68,7 @@ class _LoginState extends State<Login> {
                                 ? 'Enter a valid email'
                                 : null,
                       ),
-                      SizedBox(height: h*.04),
+                      SizedBox(height: h * .04),
                       CustomTextField(
                         text: 'Password',
                         icon: FontAwesomeIcons.lock,
@@ -79,9 +79,9 @@ class _LoginState extends State<Login> {
                                 ? 'Enter min. 6 characters'
                                 : null,
                       ),
-                      SizedBox(height: h*.08),
+                      SizedBox(height: h * .08),
                       CustomButton(text: 'Login', onPressed: () => signIn()),
-                      SizedBox(height: h*.01),
+                      SizedBox(height: h * .01),
                       TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, 'Forgot');
@@ -96,7 +96,7 @@ class _LoginState extends State<Login> {
                           )),
                         ),
                       ),
-                      SizedBox(height: h*.08),
+                      SizedBox(height: h * .08),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

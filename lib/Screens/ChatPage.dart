@@ -1,19 +1,24 @@
 import 'dart:io';
-
-import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:social_media_recorder/audio_encoder_type.dart';
+import 'package:social_media_recorder/screen/social_media_recorder.dart';
 import 'package:talk_world/Screens/ProfilePage.dart';
 import 'package:talk_world/component/image_message.dart';
+import 'package:voice_message_package/voice_message_package.dart';
 import '../component/consts.dart';
 import '../models/message.dart';
 
 class ChatPage extends StatefulWidget {
   final String collection;
+
   const ChatPage({Key? key, required this.collection}) : super(key: key);
 
   @override
@@ -41,7 +46,7 @@ class _ChatPageState extends State<ChatPage> {
             home: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/background.jpg'),
+                  image: AssetImage('assets/images/background.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -59,15 +64,22 @@ class _ChatPageState extends State<ChatPage> {
                               backgroundColor: kSuperGreyColor,
                               radius: 20,
                               child: CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/images/miniLogo.png'),
+                                backgroundImage: (user!.photoURL == null)
+                                    ? AssetImage(
+                                        'assets/images/logo.png',
+                                      )
+                                    : NetworkImage(user!.photoURL!)
+                                        as ImageProvider,
                                 backgroundColor: Colors.white,
                                 radius: 19,
                               ),
                             ),
                             TextButton(
                                 onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfilePage()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfilePage()));
                                 },
                                 child: Text(
                                   'My Profile',
@@ -98,353 +110,252 @@ class _ChatPageState extends State<ChatPage> {
                               itemCount: messagesList.length,
                               itemBuilder: (context, index) {
                                 if (messagesList[index].uid == user!.uid) {
-                                  return (messagesList[index].isImage)?
-                                  Column(
-                                    children: [
-                                      ImageMessage(isSender: true, imagePath: messagesList[index].message),
-                                      Visibility(
-                                        visible: (index == 0)
-                                            ? true
-                                            : (messagesList[index].uid ==
-                                            messagesList[index - 1]
-                                                .uid)
-                                            ? false
-                                            : true,
-                                        child: Center(
-                                          child: Text(
-                                            '${messagesList[index].date.toDate().toLocal().hour}:${messagesList[index].date.toDate().toLocal().minute}',
-                                            style: GoogleFonts.lato(
-                                                color: kSuperGreyColor,
-                                                fontSize: 13,
-                                                fontWeight:
-                                                FontWeight.w600),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ):
-                                    Column(
-                                        children: [
-                                          GestureDetector(
-                                            onLongPress: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      AlertDialog(
-                                                        actionsPadding:
-                                                            EdgeInsets.all(8),
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20)),
-                                                        title: Text(
-                                                            'Message information',
-                                                            style: GoogleFonts.lato(
-                                                                color:
-                                                                    kBlackColor,
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                        content: Text(
-                                                          'Sender: ${messagesList[index].name}\n\nDate: ${messagesList[index].date.toDate().toLocal()}\n\nEmail: ${messagesList[index].id}',
-                                                          style: GoogleFonts.lato(
-                                                              color:
-                                                                  kBlackColor,
-                                                              fontSize: 18),
-                                                        ),
-                                                      ));
-                                            },
-                                            child: BubbleSpecialThree(
-                                              text: messagesList[index].message,
-                                              color: Color(0xFF1B97F3),
-                                              tail: (index == 0)
-                                                  ? true
-                                                  : (messagesList[index - 1]
-                                                              .uid ==
-                                                          user?.uid)
-                                                      ? false
-                                                      : true,
+                                  if ((messagesList[index].type == 'image')) {
+                                    return Column(
+                                      children: [
+                                        GestureDetector(
+                                          onLongPress: () {
+                                            showMessageInformation(
+                                                context, messagesList, index);
+                                          },
+                                          child: ImageMessage(
                                               isSender: true,
-                                              textStyle: GoogleFonts.lato(
-                                                  color: Colors.white,
-                                                  fontSize: 20),
-                                            ),
-                                          ),
-                                          Visibility(
-                                            visible: (index == 0)
+                                              imagePath:
+                                                  messagesList[index].message),
+                                        ),
+                                        showDate(index, messagesList),
+                                      ],
+                                    );
+                                  } else if (messagesList[index].type ==
+                                      'text') {
+                                    return Column(
+                                      children: [
+                                        GestureDetector(
+                                          onLongPress: () {
+                                            showMessageInformation(
+                                                context, messagesList, index);
+                                          },
+                                          child: BubbleSpecialThree(
+                                            text: messagesList[index].message,
+                                            color: Color(0xFF1B97F3),
+                                            tail: (index == 0)
                                                 ? true
-                                                : (messagesList[index].uid ==
-                                                        messagesList[index - 1]
-                                                            .uid)
+                                                : (messagesList[index - 1]
+                                                            .uid ==
+                                                        user?.uid)
                                                     ? false
                                                     : true,
-                                            child: Center(
-                                              child: Text(
-                                                '${messagesList[index].date.toDate().toLocal().hour}:${messagesList[index].date.toDate().toLocal().minute}',
-                                                style: GoogleFonts.lato(
-                                                    color: kSuperGreyColor,
-                                                    fontSize: 13,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ) ;
-                                } else {
-                                  return (messagesList[index].isImage)?
-                                  Column(
-                                    children: [
-                                      ImageMessage(isSender: false, imagePath: messagesList[index].message),
-                                      Visibility(
-                                        visible: (index == 0)
-                                            ? true
-                                            : (messagesList[index].uid ==
-                                            messagesList[index - 1]
-                                                .uid)
-                                            ? false
-                                            : true,
-                                        child: Center(
-                                          child: Text(
-                                            '${messagesList[index].date.toDate().toLocal().hour}:${messagesList[index].date.toDate().toLocal().minute}',
-                                            style: GoogleFonts.lato(
-                                                color: kSuperGreyColor,
-                                                fontSize: 13,
-                                                fontWeight:
-                                                FontWeight.w600),
+                                            isSender: true,
+                                            textStyle: GoogleFonts.lato(
+                                                color: Colors.white,
+                                                fontSize: 20),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ):
-                                    Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Visibility(
-                                            visible: (index ==
-                                                    messagesList.length - 1)
-                                                ? true
-                                                : (messagesList[index].uid ==
-                                                        messagesList[index + 1]
-                                                            .uid)
-                                                    ? false
-                                                    : true,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 24),
-                                              child: Text(
-                                                messagesList[index].name,
-                                                style: GoogleFonts.lato(
-                                                    color: kSuperGreyColor,
-                                                    fontSize: 13,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
+                                        showDate(index, messagesList),
+                                      ],
+                                    );
+                                  } else {
+                                    return Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 190, bottom: 5),
+                                          child: GestureDetector(
                                             onLongPress: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      AlertDialog(
-                                                        actionsPadding:
-                                                            EdgeInsets.all(8),
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20)),
-                                                        title: Text(
-                                                            'Message information',
-                                                            style: GoogleFonts.lato(
-                                                                color:
-                                                                    kBlackColor,
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                        content: Text(
-                                                          'Sender: ${messagesList[index].name}\n\nDate: ${messagesList[index].date.toDate().toLocal()}\n\nEmail: ${messagesList[index].id}',
-                                                          style: GoogleFonts.lato(
-                                                              color:
-                                                                  kBlackColor,
-                                                              fontSize: 18),
-                                                        ),
-                                                      ));
+                                              showMessageInformation(
+                                                  context, messagesList, index);
                                             },
-                                            child: BubbleSpecialThree(
-                                              text: messagesList[index].message,
-                                              color: Color(0xFFE8E8EE),
-                                              tail: (index == 0)
-                                                  ? true
-                                                  : (messagesList[index].uid ==
-                                                          messagesList[
-                                                                  index - 1]
-                                                              .uid)
-                                                      ? false
-                                                      : true,
-                                              isSender: false,
-                                              textStyle: GoogleFonts.lato(
-                                                  color: kBlackColor,
-                                                  fontSize: 20),
+                                            child: VoiceMessage(
+                                              meBgColor: Color(0xFF1B97F3),
+                                              audioSrc:
+                                                  messagesList[index].message,
+                                              me: true,
                                             ),
                                           ),
-                                          Visibility(
-                                            visible: (index == 0)
-                                                ? true
-                                                : (messagesList[index].uid ==
-                                                        messagesList[index - 1]
-                                                            .uid)
-                                                    ? false
-                                                    : true,
-                                            child: Center(
-                                              child: Text(
-                                                '${messagesList[index].date.toDate().toLocal().hour}:${messagesList[index].date.toDate().toLocal().minute}',
-                                                style: GoogleFonts.lato(
-                                                    color: kSuperGreyColor,
-                                                    fontSize: 13,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                        ),
+                                        showDate(index, messagesList),
+                                      ],
+                                    );
+                                  }
+                                } else {
+                                  if ((messagesList[index].type == 'image')) {
+                                    return Column(
+                                      children: [
+                                        showName(index, messagesList),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            spaceBeforeMessage(
+                                                index, messagesList),
+                                            showSenderPhoto(
+                                                index, messagesList, 18),
+                                            GestureDetector(
+                                              onLongPress: () {
+                                                showMessageInformation(context,
+                                                    messagesList, index);
+                                              },
+                                              child: ImageMessage(
+                                                  isSender: false,
+                                                  imagePath: messagesList[index]
+                                                      .message),
+                                            ),
+                                          ],
+                                        ),
+                                        showDate(index, messagesList),
+                                      ],
+                                    );
+                                  } else if (messagesList[index].type ==
+                                      'text') {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        showName(index, messagesList),
+                                        Row(
+                                          children: [
+                                            spaceBeforeMessage(
+                                                index, messagesList),
+                                            showSenderPhoto(
+                                                index, messagesList, 18),
+                                            GestureDetector(
+                                              onLongPress: () {
+                                                showMessageInformation(context,
+                                                    messagesList, index);
+                                              },
+                                              child: BubbleSpecialThree(
+                                                text:
+                                                    messagesList[index].message,
+                                                color: kWhiteColor,
+                                                tail: (index == 0)
+                                                    ? true
+                                                    : (messagesList[index]
+                                                                .uid ==
+                                                            messagesList[
+                                                                    index - 1]
+                                                                .uid)
+                                                        ? false
+                                                        : true,
+                                                isSender: false,
+                                                textStyle: GoogleFonts.lato(
+                                                    color: kBlackColor,
+                                                    fontSize: 20),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      );
+                                          ],
+                                        ),
+                                        showDate(index, messagesList),
+                                      ],
+                                    );
+                                  } else {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        showName(index, messagesList),
+                                        Row(
+                                          children: [
+                                            spaceBeforeMessage(
+                                                index, messagesList),
+                                            showSenderPhoto(
+                                                index, messagesList, 18),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 17,
+                                                  right: 150,
+                                                  bottom: 5),
+                                              child: GestureDetector(
+                                                onLongPress: () {
+                                                  showMessageInformation(
+                                                      context,
+                                                      messagesList,
+                                                      index);
+                                                },
+                                                child: VoiceMessage(
+                                                  contactBgColor: kWhiteColor,
+                                                  contactFgColor: kGreyColor,
+                                                  contactPlayIconColor:
+                                                      kSuperGreyColor,
+                                                  audioSrc: messagesList[index]
+                                                      .message,
+                                                  me: false,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        showDate(index, messagesList),
+                                      ],
+                                    );
+                                  }
                                 }
                               }),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 13),
-                          child: TextField(
-                            controller: messageController,
-                            onSubmitted: (data) {
-                              if (messageController.text.trim() != '' &&
-                                  messageController.text.trim() != '') {
-                                final user = FirebaseAuth.instance.currentUser;
-                                messages.add(
-                                  {
-                                    'message': messageController.text,
-                                    'date': DateTime.now(),
-                                    'id': user!.email,
-                                    'name': user.displayName,
-                                    'uid': user.uid,
-                                    'isImage': false,
-                                  },
-                                );
-                                messageController.clear();
-                                _messageController.animateTo(0,
-                                    duration: Duration(milliseconds: 500),
-                                    curve: Curves.easeIn);
-                              }
-                            },
-                            style: GoogleFonts.lato(
-                                textStyle: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 20,
-                              color: kBlackColor,
-                            )),
-                            cursorColor: kSuperGreyColor,
-                            cursorHeight: 25,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(
-                                  left: 33, top: 20, bottom: 20),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.never,
-                              filled: true,
-                              fillColor: kGreyColor,
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: kGreyColor),
-                                  borderRadius: BorderRadius.circular(15)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: kGreyColor),
-                                  borderRadius: BorderRadius.circular(15)),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: kGreyColor),
-                                  borderRadius: BorderRadius.circular(15)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: kGreyColor),
-                                  borderRadius: BorderRadius.circular(15)),
-                              labelText: 'Type... in ${widget.collection}',
-                              labelStyle: GoogleFonts.lato(
-                                  fontSize: 20,
-                                  color: kSuperGreyColor,
-                                  fontWeight: FontWeight.w800),
-                              hintText: 'Type... in ${widget.collection}',
-                              hintStyle: GoogleFonts.lato(
-                                  fontSize: 20,
-                                  color: kSuperGreyColor,
-                                  fontWeight: FontWeight.w800),
-                              suffixIcon: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    onPressed: () async {
-                                      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-                                      if (image != null) {
-                                        final file = File(image.path);
-                                        final path = 'files/${image.name}';
-                                        final ref = FirebaseStorage.instance.ref().child(path);
+                        Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            sendTextField(messages),
+                            FutureBuilder<Directory?>(
+                                future: getTemporaryDirectory(),
+                                builder: (context,
+                                    AsyncSnapshot<Directory?> snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    return SocialMediaRecorder(
+                                      storeSoundRecoringPath:
+                                          '${snapshot.data?.path}',
+                                      sendRequestFunction: (soundFile) async {
+                                        final file = File(soundFile.path);
+                                        final user =
+                                            FirebaseAuth.instance.currentUser;
+                                        final path =
+                                            'files/sounds/${user!.email}/${DateTime.now().toLocal().day}-${DateTime.now().toLocal().hour}-${DateTime.now().toLocal().minute}';
+                                        final ref = FirebaseStorage.instance
+                                            .ref()
+                                            .child(path);
                                         UploadTask? uploadTask;
                                         uploadTask = ref.putFile(file);
-                                        final snapshot = await uploadTask.whenComplete(() {});
-                                        final urlDownload = await snapshot.ref.getDownloadURL();
-                                        final user =
-                                            FirebaseAuth.instance.currentUser;
+                                        final snapshot = await uploadTask
+                                            .whenComplete(() {});
+                                        final urlDownload =
+                                            await snapshot.ref.getDownloadURL();
                                         messages.add(
                                           {
-                                            'message':urlDownload,
+                                            'message': urlDownload,
                                             'date': DateTime.now(),
-                                            'id': user!.email,
+                                            'id': user.email,
                                             'name': user.displayName,
                                             'uid': user.uid,
-                                            'isImage': true,
+                                            'type': 'voice',
+                                            'profilePhoto': user.photoURL,
                                           },
                                         );
-                                        //image = null;
-                                      }
                                       },
-                                    icon: Icon(
-                                      Icons.image,
-                                      color: kSuperGreyColor,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      if (messageController.text.trim() != '' &&
-                                          messageController.text.trim() != '') {
-                                        final user =
-                                            FirebaseAuth.instance.currentUser;
-                                        messages.add(
-                                          {
-                                            'message': messageController.text,
-                                            'date': DateTime.now(),
-                                            'id': user!.email,
-                                            'name': user.displayName,
-                                            'uid': user.uid,
-                                            'isImage': false,
-                                          },
-                                        );
-                                        messageController.clear();
-                                        _messageController.animateTo(0,
-                                            duration: Duration(milliseconds: 500),
-                                            curve: Curves.easeIn);
-                                      }
-                                    },
-                                    icon: Icon(
-                                      Icons.send_rounded,
-                                      color: kSuperGreyColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                                      encode: AudioEncoderType.AMR_NB,
+                                      recordIcon: Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Icon(
+                                          Icons.keyboard_voice,
+                                          color: kSuperGreyColor,
+                                        ),
+                                      ),
+                                      recordIconWhenLockedRecord: Icon(
+                                        Icons.check,
+                                        color: kBlackColor,
+                                      ),
+                                      backGroundColor: kGreyColor,
+                                      recordIconBackGroundColor: Colors.red,
+                                      counterBackGroundColor: kGreyColor,
+                                      recordIconWhenLockBackGroundColor:
+                                          kGreyColor,
+                                      cancelTextBackGroundColor: kGreyColor,
+                                      lockButton: Icon(Icons.lock),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
+                          ],
                         ),
                       ],
                     ),
@@ -455,7 +366,7 @@ class _ChatPageState extends State<ChatPage> {
           return Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-              image: AssetImage('assets/images/background.jpg'),
+              image: AssetImage('assets/images/background.png'),
               fit: BoxFit.cover,
             )),
             child: Center(
@@ -468,4 +379,296 @@ class _ChatPageState extends State<ChatPage> {
       },
     );
   }
+
+  spaceBeforeMessage(int index, List<Message> messagesList) {
+    return Visibility(
+        visible: !((index == 0)
+            ? true
+            : (messagesList[index].uid == messagesList[index - 1].uid)
+                ? false
+                : true),
+        child: SizedBox(width: 25));
+  }
+
+  showSenderPhoto(int index, List<Message> messagesList, double? size) {
+    return Visibility(
+      visible: (index == 0)
+          ? true
+          : (messagesList[index].uid == messagesList[index - 1].uid)
+              ? false
+              : true,
+      child: CircleAvatar(
+        backgroundColor: kSuperGreyColor,
+        radius: size,
+        child: CircleAvatar(
+          backgroundImage: (messagesList[index].profilePhoto == null ||
+                  messagesList[index].profilePhoto == '')
+              ? AssetImage(
+                  'assets/images/miniLogo.png',
+                )
+              : NetworkImage(messagesList[index].profilePhoto!)
+                  as ImageProvider,
+          backgroundColor: Colors.white,
+          radius: (size! - 1),
+        ),
+      ),
+    );
+  }
+
+  sendTextField(CollectionReference<Map<String, dynamic>> messages) {
+    return Flexible(
+      child: TextField(
+        controller: messageController,
+        onSubmitted: (data) {
+          if (messageController.text.trim() != '' &&
+              messageController.text.trim() != '') {
+            final user = FirebaseAuth.instance.currentUser;
+            messages.add(
+              {
+                'message': messageController.text,
+                'date': DateTime.now(),
+                'id': user!.email,
+                'name': user.displayName,
+                'uid': user.uid,
+                'type': 'text',
+                'profilePhoto': user.photoURL,
+              },
+            );
+            messageController.clear();
+            _messageController.animateTo(0,
+                duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+          }
+        },
+        style: GoogleFonts.lato(
+            textStyle: TextStyle(
+          fontWeight: FontWeight.w800,
+          fontSize: 20,
+          color: kBlackColor,
+        )),
+        cursorColor: kSuperGreyColor,
+        cursorHeight: 25,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: 20, top: 19.5, bottom: 19.5),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          filled: true,
+          fillColor: kGreyColor,
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: kGreyColor),
+              borderRadius: BorderRadius.zero),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: kGreyColor),
+              borderRadius: BorderRadius.zero),
+          errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: kGreyColor),
+              borderRadius: BorderRadius.zero),
+          focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: kGreyColor),
+              borderRadius: BorderRadius.zero),
+          labelText: 'Type... in ${widget.collection}',
+          labelStyle: GoogleFonts.lato(
+              fontSize: 20,
+              color: kSuperGreyColor,
+              fontWeight: FontWeight.w800),
+          hintText: 'Type... in ${widget.collection}',
+          hintStyle: GoogleFonts.lato(
+              fontSize: 20,
+              color: kSuperGreyColor,
+              fontWeight: FontWeight.w800),
+          suffixIcon: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: () async {
+                  XFile? image =
+                      await _picker.pickImage(source: ImageSource.gallery);
+                  if (image != null) {
+                    final file = File(image.path);
+                    final user = FirebaseAuth.instance.currentUser;
+                    final path = 'files/images/${user!.email}/${image.name}';
+                    final ref = FirebaseStorage.instance.ref().child(path);
+                    UploadTask? uploadTask;
+                    uploadTask = ref.putFile(file);
+                    final snapshot = await uploadTask.whenComplete(() {});
+                    final urlDownload = await snapshot.ref.getDownloadURL();
+                    messages.add(
+                      {
+                        'message': urlDownload,
+                        'date': DateTime.now(),
+                        'id': user.email,
+                        'name': user.displayName,
+                        'uid': user.uid,
+                        'type': 'image',
+                        'profilePhoto': user.photoURL,
+                      },
+                    );
+                    //image = null;
+                  }
+                },
+                icon: Icon(
+                  Icons.image,
+                  color: kSuperGreyColor,
+                ),
+              ),
+              IconButton(
+                onPressed: () async {
+                  if (messageController.text.trim() != '' &&
+                      messageController.text.trim() != '') {
+                    final user = FirebaseAuth.instance.currentUser;
+                    messages.add(
+                      {
+                        'message': messageController.text,
+                        'date': DateTime.now(),
+                        'id': user!.email,
+                        'name': user.displayName,
+                        'uid': user.uid,
+                        'type': 'text',
+                        'profilePhoto': user.photoURL,
+                      },
+                    );
+                    messageController.clear();
+                    _messageController.animateTo(0,
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.easeIn);
+                  }
+                },
+                icon: Icon(
+                  Icons.send_rounded,
+                  color: kSuperGreyColor,
+                ),
+              ),
+              SizedBox(width: 35),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  showDate(int index, List<Message> messagesList) {
+    return Visibility(
+      visible: (index == 0)
+          ? true
+          : (messagesList[index].uid == messagesList[index - 1].uid)
+              ? false
+              : true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: (index == 0)
+            ? DateChip(
+                date: messagesList[index].date.toDate(),
+                color: kWhiteColor,
+              )
+            : (messagesList[index].date.toDate().day ==
+                    messagesList[index - 1].date.toDate().day)
+                ? Center(
+                    child: Text(
+                      '${messagesList[index].date.toDate().toLocal().hour}:${messagesList[index].date.toDate().toLocal().minute}',
+                      style: GoogleFonts.lato(
+                          color: kSuperGreyColor,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  )
+                : DateChip(
+                    date: messagesList[index].date.toDate(),
+                    color: kWhiteColor,
+                  ),
+      ),
+    );
+  }
+
+  showName(int index, List<Message> messagesList) {
+    return Visibility(
+      visible: (index == messagesList.length - 1)
+          ? true
+          : (messagesList[index].uid == messagesList[index + 1].uid)
+              ? false
+              : true,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 55),
+        child: Text(
+          messagesList[index].name,
+          style: GoogleFonts.lato(
+              color: kSuperGreyColor,
+              fontSize: 13,
+              fontWeight: FontWeight.w600),
+        ),
+      ),
+    );
+  }
+
+  showMessageInformation(
+      BuildContext context, List<Message> messagesList, int index) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              actionsPadding: EdgeInsets.all(8),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Center(
+                child: Column(
+                  children: [
+                    Text('Message information',
+                        style: GoogleFonts.lato(
+                            color: kBlackColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(height: 10),
+                    GestureDetector(
+                      child: CircleAvatar(
+                        backgroundColor: kSuperGreyColor,
+                        radius: 35,
+                        child: CircleAvatar(
+                          backgroundImage: (messagesList[index].profilePhoto ==
+                                      null ||
+                                  messagesList[index].profilePhoto == '')
+                              ? AssetImage(
+                                  'assets/images/miniLogo.png',
+                                )
+                              : NetworkImage(messagesList[index].profilePhoto!)
+                                  as ImageProvider,
+                          backgroundColor: Colors.white,
+                          radius: (34),
+                        ),
+                      ),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => InteractiveViewer(
+                            panEnabled: false,
+                            boundaryMargin: EdgeInsets.all(100),
+                            minScale: 0.5,
+                            maxScale: 6,
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  messagesList[index].profilePhoto!.toString(),
+                              placeholder: (context, url) => Center(
+                                child: SizedBox(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.purple,
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Image.asset('assets/images/miniLogo.png'),
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  ],
+                ),
+              ),
+              content: Text(
+                'Sender: ${messagesList[index].name}\n\nDate: ${messagesList[index].date.toDate().toLocal()}\n\nEmail: ${messagesList[index].id}',
+                style: GoogleFonts.lato(color: kBlackColor, fontSize: 18),
+              ),
+            ));
+  }
+}
+
+Future<String> getPath() async {
+  Directory tempDir = await getTemporaryDirectory();
+  return tempDir.path;
 }

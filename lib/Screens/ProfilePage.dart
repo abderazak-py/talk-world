@@ -10,7 +10,6 @@ import '../component/Utils.dart';
 import '../component/consts.dart';
 import '../main.dart';
 
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -24,7 +23,6 @@ class _ProfilePageState extends State<ProfilePage> {
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
-
 
   @override
   void dispose() {
@@ -42,12 +40,13 @@ class _ProfilePageState extends State<ProfilePage> {
       scaffoldMessengerKey: Utils4.messengerKey4,
       home: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/background.jpg'),
+          image: DecorationImage(
+            image: AssetImage('assets/images/background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
             body: Form(
               key: formkey,
               child: SafeArea(
@@ -61,21 +60,25 @@ class _ProfilePageState extends State<ProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             SizedBox(width: 30),
-                            TextButton(onPressed: () {
-                              Navigator.pop(context);
-                              },
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
                                 child: Row(
                                   children: [
-                                    Icon(FontAwesomeIcons.circleLeft, color: kBlueColor,size: 20),
-                                    SizedBox(width: 3,),
+                                    Icon(FontAwesomeIcons.circleLeft,
+                                        color: kBlueColor, size: 20),
+                                    SizedBox(
+                                      width: 3,
+                                    ),
                                     Text(
                                       'Back',
                                       style: GoogleFonts.lato(
                                           textStyle: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 20,
-                                            color: kBlueColor,
-                                          )),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                        color: kBlueColor,
+                                      )),
                                     ),
                                   ],
                                 )),
@@ -83,43 +86,43 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         Image.asset(
                           'assets/images/logo.png',
-                          width: w*.4,
-                          height: w*.4,
+                          width: w * .4,
+                          height: w * .4,
                         ),
-                        SizedBox(height: h*.04),
+                        SizedBox(height: h * .04),
                         CustomTextField(
                           text: 'Change your name',
                           icon: FontAwesomeIcons.solidUser,
                           hide: false,
                           controller: nameController,
                           validator: (name) =>
-                          name!.isNotEmpty && name.trim().length < 3
-                              ? 'Enter a name'
-                              : null,
+                              name!.isNotEmpty && name.trim().length < 3
+                                  ? 'Enter a name'
+                                  : null,
                         ),
-                        SizedBox(height: h*.04),
+                        SizedBox(height: h * .04),
                         CustomTextField(
                           text: 'Change email',
                           icon: FontAwesomeIcons.solidEnvelope,
                           hide: false,
                           controller: emailController,
-                          validator: (email) =>
-                          email!.isNotEmpty && !EmailValidator.validate(email)
+                          validator: (email) => email!.isNotEmpty &&
+                                  !EmailValidator.validate(email)
                               ? 'Enter a valid email'
                               : null,
                         ),
-                        SizedBox(height: h*.04),
+                        SizedBox(height: h * .04),
                         CustomTextField(
                           text: 'Change password',
                           icon: FontAwesomeIcons.lock,
                           hide: true,
                           controller: passwordController,
                           validator: (password) =>
-                          password!.isNotEmpty && password.length < 6
-                              ? 'Enter min. 6 characters'
-                              : null,
+                              password!.isNotEmpty && password.length < 6
+                                  ? 'Enter min. 6 characters'
+                                  : null,
                         ),
-                        SizedBox(height: h*.1),
+                        SizedBox(height: h * .1),
                         CustomButton(
                           text: 'Update',
                           onPressed: () {
@@ -135,6 +138,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
   Future update() async {
     final isValid = formkey.currentState!.validate();
     if (!isValid) return;
@@ -147,17 +151,19 @@ class _ProfilePageState extends State<ProfilePage> {
     );
 
     try {
-      if(nameController.text.trim().isNotEmpty) {
+      if (nameController.text.trim().isNotEmpty) {
         await user!.updateDisplayName(nameController.text.trim());
-        Utils4.showSnackBar('your new name is ${nameController.text.trim()}', Colors.green);
+        Utils4.showSnackBar(
+            'your new name is ${nameController.text.trim()}', Colors.green);
         nameController.clear();
       }
-      if(emailController.text.trim().isNotEmpty) {
+      if (emailController.text.trim().isNotEmpty) {
         await user!.updateEmail(emailController.text.trim());
-        Utils4.showSnackBar('your new email is ${emailController.text.trim()}', Colors.green);
+        Utils4.showSnackBar(
+            'your new email is ${emailController.text.trim()}', Colors.green);
         emailController.clear();
       }
-      if(passwordController.text.isNotEmpty) {
+      if (passwordController.text.isNotEmpty) {
         await user!.updatePassword(passwordController.text);
         Utils4.showSnackBar('Password Changed', Colors.green);
         passwordController.clear();

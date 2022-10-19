@@ -61,6 +61,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    namespace 'com.vokernos.talk_world'
 }
 
 flutter {

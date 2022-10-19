@@ -129,7 +129,9 @@ class _RegisterState extends State<Register> {
                           ),
                         ],
                       ),
-                      SizedBox(height: h*.1,)
+                      SizedBox(
+                        height: h * .1,
+                      )
                     ],
                   ),
                 ),

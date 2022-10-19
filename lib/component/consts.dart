@@ -12,3 +12,5 @@ String chatPageRoute = 'Chat';
 String profilePageRoute = 'Profile';
 
 String kMessagesCollections = 'messages';
+
+//String path = '/data/user/0/com.vokernos.talk_world/app_flutter';

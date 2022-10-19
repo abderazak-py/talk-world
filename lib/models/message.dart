@@ -6,11 +6,12 @@ class Message {
   final String name;
   final String uid;
   final Timestamp date;
-  final bool isImage;
+  final String type;
 
-  Message(this.message, this.id, this.name, this.uid, this.date, this.isImage);
+  Message(this.message, this.id, this.name, this.uid, this.date, this.type);
 
-  factory Message.fromJson(jsonData){
-    return Message(jsonData['message'], jsonData['id'],jsonData['name'],jsonData['uid'],jsonData['date'],jsonData['isImage']);
+  factory Message.fromJson(jsonData) {
+    return Message(jsonData['message'], jsonData['id'], jsonData['name'],
+        jsonData['uid'], jsonData['date'], jsonData['type']);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:talk_world/Screens/ChatPage.dart';
 import 'package:talk_world/component/room_card.dart';
 
@@ -13,7 +14,8 @@ class WorldsList extends StatelessWidget {
     return MaterialApp(
       home: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/background.jpg'),
+          image: DecorationImage(
+            image: AssetImage('assets/images/background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -30,7 +32,7 @@ class WorldsList extends StatelessWidget {
                       radius: 20,
                       child: CircleAvatar(
                         backgroundImage:
-                        AssetImage('assets/images/miniLogo.png'),
+                            AssetImage('assets/images/miniLogo.png'),
                         backgroundColor: Colors.white,
                         radius: 19,
                       ),
@@ -49,24 +51,43 @@ class WorldsList extends StatelessWidget {
                     Spacer(),
                     TextButton(
                         onPressed: () {
-                         // FirebaseAuth.instance.signOut();
+                          // FirebaseAuth.instance.signOut();
                         },
                         child: Text(
                           'SignOut',
                           style: GoogleFonts.lato(
-                              color: Colors.red,
-                              fontWeight: FontWeight.w600),
+                              color: Colors.red, fontWeight: FontWeight.w600),
                         )),
                     SizedBox(width: 30),
                   ],
                 ),
                 Expanded(
                   child: ListView(
-                    children: const [
-                      RoomCard(path: 'assets/images/gaming.jpg', roomRoute: ChatPage(collection: 'gaming',)),
-                      RoomCard(path: 'assets/images/anime.jpg', roomRoute: ChatPage(collection: 'anime',),),
-                      RoomCard(path: 'assets/images/series.jpg', roomRoute: ChatPage(collection: 'series',),),
-                      RoomCard(path: 'assets/images/movies.jpg', roomRoute: ChatPage(collection: 'movies',),),
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      RoomCard(
+                          path: 'assets/images/gaming.jpg',
+                          roomRoute: ChatPage(
+                            collection: 'gaming',
+                          )),
+                      RoomCard(
+                        path: 'assets/images/anime.jpg',
+                        roomRoute: ChatPage(
+                          collection: 'anime',
+                        ),
+                      ),
+                      RoomCard(
+                        path: 'assets/images/series.jpg',
+                        roomRoute: ChatPage(
+                          collection: 'series',
+                        ),
+                      ),
+                      RoomCard(
+                        path: 'assets/images/movies.jpg',
+                        roomRoute: ChatPage(
+                          collection: 'movies',
+                        ),
+                      ),
                     ],
                   ),
                 ),

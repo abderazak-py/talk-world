@@ -25,12 +25,6 @@ uses-sdk
 INJECTED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml
 INJECTED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml
-INJECTED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml
-INJECTED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml
-	android:targetSdkVersion
-		INJECTED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml
-		ADDED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml
 	android:minSdkVersion
 		INJECTED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml
 		ADDED from C:\Users\sa\AppData\Local\Pub\Cache\hosted\pub.dartlang.org\firebase_auth-3.11.1\android\src\main\AndroidManifest.xml

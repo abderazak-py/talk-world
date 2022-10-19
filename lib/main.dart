@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talk_world/Screens/ForgotPassword.dart';
 import 'package:talk_world/Screens/Login.dart';
@@ -19,7 +20,6 @@ Future main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool('showHome') ?? false;
-
 
   runApp(Home(
     showHome: showHome,
@@ -48,19 +48,18 @@ class SignInOrNot extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        loginPageRoute : (context) => Login(),
-        registerPageRoute : (context) => Register(),
-        forgotPageRoute : (context) => ForgotPassword(),
-        profilePageRoute : (context) => ProfilePage(),
+        loginPageRoute: (context) => Login(),
+        registerPageRoute: (context) => Register(),
+        forgotPageRoute: (context) => ForgotPassword(),
+        profilePageRoute: (context) => ProfilePage(),
       },
       home: Scaffold(
         body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting){
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
-            }
-            else if (snapshot.hasData) {
+            } else if (snapshot.hasData) {
               return WorldsList();
             } else {
               return Login();

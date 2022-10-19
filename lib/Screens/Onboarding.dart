@@ -40,7 +40,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           style: TextStyle(fontSize: 20),
                         )
                       : GestureDetector(
-                          onTap: () => controller.animateToPage(2, duration: Duration(milliseconds: 400), curve: Curves.easeInOut),
+                          onTap: () => controller.animateToPage(2,
+                              duration: Duration(milliseconds: 400),
+                              curve: Curves.easeInOut),
                           child: Text(
                             'Skip',
                             style: TextStyle(color: Colors.red, fontSize: 20),
@@ -78,14 +80,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         final prefs = await SharedPreferences.getInstance();
                         prefs.setBool('showHome', true);
                         if (!mounted) return;
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => Login()));
                       })
                   : CustomButton(
                       text: 'Next',
                       onPressed: () {
-                        controller.animateToPage((controller.page!.toInt() + 1), duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                      }
-                    ),
+                        controller.animateToPage((controller.page!.toInt() + 1),
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.easeInOut);
+                      }),
               Spacer(flex: 3),
             ],
           );

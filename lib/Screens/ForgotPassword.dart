@@ -20,7 +20,6 @@ class _LoginState extends State<ForgotPassword> {
   final formkey = GlobalKey<FormState>();
   final emailController = TextEditingController();
 
-
   @override
   void dispose() {
     emailController.dispose();
@@ -33,12 +32,13 @@ class _LoginState extends State<ForgotPassword> {
       scaffoldMessengerKey: Utils3.messengerKey3,
       home: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/background.jpg'),
+          image: DecorationImage(
+            image: AssetImage('assets/images/background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: false,
             body: Form(
               key: formkey,
@@ -58,10 +58,10 @@ class _LoginState extends State<ForgotPassword> {
                       textAlign: TextAlign.start,
                       style: GoogleFonts.lato(
                           textStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 25,
-                            color: Colors.white,
-                          )),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 25,
+                        color: Colors.white,
+                      )),
                     ),
                   ),
                   CustomTextField(
@@ -70,9 +70,9 @@ class _LoginState extends State<ForgotPassword> {
                     hide: false,
                     controller: emailController,
                     validator: (email) =>
-                    email != null && !EmailValidator.validate(email)
-                        ? 'Enter a valid email'
-                        : null,
+                        email != null && !EmailValidator.validate(email)
+                            ? 'Enter a valid email'
+                            : null,
                   ),
                   SizedBox(height: 60),
                   CustomButton(
@@ -81,18 +81,20 @@ class _LoginState extends State<ForgotPassword> {
                         forgotPassword();
                       }),
                   SizedBox(height: 20),
-                  TextButton(onPressed: (){
-                    Navigator.pop(context);
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
                     child: Text(
-                    'back to login Screen?',
-                    style: GoogleFonts.lato(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
-                          color: kBlueColor,
-                        )),
-                  ),),
+                      'back to login Screen?',
+                      style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 17,
+                        color: kBlueColor,
+                      )),
+                    ),
+                  ),
                   Spacer(flex: 2)
                 ],
               ),
@@ -112,8 +114,8 @@ class _LoginState extends State<ForgotPassword> {
       barrierDismissible: false,
     );
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-          email: emailController.text.trim());
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text.trim());
     } on FirebaseAuthException catch (e) {
       Utils3.showSnackBar(e.message);
     }

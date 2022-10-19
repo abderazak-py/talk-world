@@ -45,7 +45,7 @@ class Utils3 {
 class Utils4 {
   static final messengerKey4 = GlobalKey<ScaffoldMessengerState>();
 
-  static showSnackBar(String? text,Color? color) {
+  static showSnackBar(String? text, Color? color) {
     if (text == null) return;
 
     final snackBar = SnackBar(content: Text(text), backgroundColor: color);
