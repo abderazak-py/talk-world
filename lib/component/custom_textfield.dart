@@ -61,9 +61,12 @@ class CustomTextField extends StatelessWidget {
               fontSize: 20,
               color: kSuperGreyColor,
               fontWeight: FontWeight.w800),
-          prefixIcon: Icon(
-            icon,
-            color: kSuperGreyColor,
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Icon(
+              icon,
+              color: kSuperGreyColor,
+            ),
           ),
         ),
       ),

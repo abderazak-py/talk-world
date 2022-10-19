@@ -1,9 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:talk_world/Screens/ChatPage.dart';
 import 'package:talk_world/component/room_card.dart';
-
 import '../component/consts.dart';
 
 class WorldsList extends StatelessWidget {
@@ -11,11 +10,12 @@ class WorldsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
       home: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/background.jpg'),
+            image: AssetImage('assets/images/background.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -31,8 +31,11 @@ class WorldsList extends StatelessWidget {
                       backgroundColor: kSuperGreyColor,
                       radius: 20,
                       child: CircleAvatar(
-                        backgroundImage:
-                            AssetImage('assets/images/miniLogo.png'),
+                        backgroundImage: (user!.photoURL == null)
+                            ? AssetImage(
+                                'assets/images/logo.png',
+                              )
+                            : NetworkImage(user.photoURL!) as ImageProvider,
                         backgroundColor: Colors.white,
                         radius: 19,
                       ),
@@ -51,7 +54,7 @@ class WorldsList extends StatelessWidget {
                     Spacer(),
                     TextButton(
                         onPressed: () {
-                          // FirebaseAuth.instance.signOut();
+                          FirebaseAuth.instance.signOut();
                         },
                         child: Text(
                           'SignOut',
@@ -63,8 +66,7 @@ class WorldsList extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView(
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
+                    children: const [
                       RoomCard(
                           path: 'assets/images/gaming.jpg',
                           roomRoute: ChatPage(

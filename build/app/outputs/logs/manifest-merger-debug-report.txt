@@ -53,6 +53,7 @@ MERGED from [:firebase_storage] C:\talk_world\build\firebase_storage\intermediat
 MERGED from [:firebase_core] C:\talk_world\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-15:12
 MERGED from [:image_picker_android] C:\talk_world\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-19:12
 MERGED from [:flutter_plugin_android_lifecycle] C:\talk_world\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:sqflite] C:\talk_world\build\sqflite\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:path_provider_android] C:\talk_world\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:flutter_native_splash] C:\talk_world\build\flutter_native_splash\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:just_audio] C:\talk_world\build\just_audio\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
@@ -153,6 +154,8 @@ MERGED from [:image_picker_android] C:\talk_world\build\image_picker_android\int
 MERGED from [:image_picker_android] C:\talk_world\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] C:\talk_world\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] C:\talk_world\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:sqflite] C:\talk_world\build\sqflite\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:sqflite] C:\talk_world\build\sqflite\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:path_provider_android] C:\talk_world\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:path_provider_android] C:\talk_world\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_native_splash] C:\talk_world\build\flutter_native_splash\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
