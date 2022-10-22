@@ -35,7 +35,7 @@ class ImageMessage extends StatelessWidget {
       },
       child: Padding(
         padding: EdgeInsets.only(
-            left: isSender ? 170 : 2,
+            left: isSender ? 170 : 17,
             right: isSender ? 17 : 130,
             bottom: 5,
             top: 5),

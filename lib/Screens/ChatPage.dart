@@ -387,7 +387,7 @@ class _ChatPageState extends State<ChatPage> {
             : (messagesList[index].uid == messagesList[index - 1].uid)
                 ? false
                 : true),
-        child: SizedBox(width: 25));
+        child: SizedBox(width: 35));
   }
 
   showSenderPhoto(int index, List<Message> messagesList, double? size) {
@@ -555,9 +555,11 @@ class _ChatPageState extends State<ChatPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: (index == 0)
-            ? DateChip(
-                date: messagesList[index].date.toDate(),
-                color: kWhiteColor,
+            ? Center(
+                child: DateChip(
+                  date: messagesList[index].date.toDate(),
+                  color: kGreyColor,
+                ),
               )
             : (messagesList[index].date.toDate().day ==
                     messagesList[index - 1].date.toDate().day)
@@ -570,9 +572,11 @@ class _ChatPageState extends State<ChatPage> {
                           fontWeight: FontWeight.w600),
                     ),
                   )
-                : DateChip(
-                    date: messagesList[index].date.toDate(),
-                    color: kWhiteColor,
+                : Center(
+                    child: DateChip(
+                      date: messagesList[index].date.toDate(),
+                      color: kGreyColor,
+                    ),
                   ),
       ),
     );
