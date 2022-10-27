@@ -51,6 +51,8 @@ dependencies:
   voice_message_package: ^0.0.74
   cached_network_image: ^3.2.2
   flutter_svg: ^1.1.5
+  internet_connection_checker: ^1.0.0+1
+  top_snackbar_flutter: ^2.1.1
 
 flutter_native_splash:
   background_image: "assets/images/background.png"
