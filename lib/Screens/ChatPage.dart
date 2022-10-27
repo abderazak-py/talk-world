@@ -3,17 +3,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:social_media_recorder/audio_encoder_type.dart';
-import 'package:social_media_recorder/screen/social_media_recorder.dart';
-import 'package:talk_world/Screens/ProfilePage.dart';
 import 'package:talk_world/component/image_message.dart';
 import 'package:voice_message_package/voice_message_package.dart';
 import '../component/consts.dart';
+import '../component/custom_app_bar.dart';
+import '../component/send_message_text_field.dart';
+import '../component/send_voice_message.dart';
+import '../component/show_date.dart';
+import '../component/show_sender_name.dart';
+import '../component/show_sender_photo.dart';
 import '../models/message.dart';
 
 class ChatPage extends StatefulWidget {
@@ -57,51 +59,7 @@ class _ChatPageState extends State<ChatPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Row(
-                          children: [
-                            SizedBox(width: 30),
-                            CircleAvatar(
-                              backgroundColor: kSuperGreyColor,
-                              radius: 20,
-                              child: CircleAvatar(
-                                backgroundImage: (user!.photoURL == null)
-                                    ? AssetImage(
-                                        'assets/images/logo.png',
-                                      )
-                                    : NetworkImage(user!.photoURL!)
-                                        as ImageProvider,
-                                backgroundColor: Colors.white,
-                                radius: 19,
-                              ),
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ProfilePage()));
-                                },
-                                child: Text(
-                                  'My Profile',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700),
-                                )),
-                            Spacer(),
-                            TextButton(
-                                onPressed: () {
-                                  FirebaseAuth.instance.signOut();
-                                },
-                                child: Text(
-                                  'SignOut',
-                                  style: GoogleFonts.lato(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.w600),
-                                )),
-                            SizedBox(width: 30),
-                          ],
-                        ),
+                        CustomAppBar(),
                         SizedBox(height: 5),
                         Expanded(
                           child: ListView.builder(
@@ -123,7 +81,10 @@ class _ChatPageState extends State<ChatPage> {
                                               imagePath:
                                                   messagesList[index].message),
                                         ),
-                                        showDate(index, messagesList),
+                                        ShowDate(
+                                          index: index,
+                                          messagesList: messagesList,
+                                        ),
                                       ],
                                     );
                                   } else if (messagesList[index].type ==
@@ -151,7 +112,10 @@ class _ChatPageState extends State<ChatPage> {
                                                 fontSize: 20),
                                           ),
                                         ),
-                                        showDate(index, messagesList),
+                                        ShowDate(
+                                          index: index,
+                                          messagesList: messagesList,
+                                        ),
                                       ],
                                     );
                                   } else {
@@ -173,7 +137,10 @@ class _ChatPageState extends State<ChatPage> {
                                             ),
                                           ),
                                         ),
-                                        showDate(index, messagesList),
+                                        ShowDate(
+                                          index: index,
+                                          messagesList: messagesList,
+                                        ),
                                       ],
                                     );
                                   }
@@ -181,15 +148,19 @@ class _ChatPageState extends State<ChatPage> {
                                   if ((messagesList[index].type == 'image')) {
                                     return Column(
                                       children: [
-                                        showName(index, messagesList),
+                                        ShowSenderName(
+                                          index: index,
+                                          messagesList: messagesList,
+                                        ),
                                         Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.end,
                                           children: [
                                             spaceBeforeMessage(
                                                 index, messagesList),
-                                            showSenderPhoto(
-                                                index, messagesList, 18),
+                                            ShowSenderPhoto(
+                                                index: index,
+                                                messagesList: messagesList),
                                             GestureDetector(
                                               onLongPress: () {
                                                 showMessageInformation(context,
@@ -202,7 +173,10 @@ class _ChatPageState extends State<ChatPage> {
                                             ),
                                           ],
                                         ),
-                                        showDate(index, messagesList),
+                                        ShowDate(
+                                          index: index,
+                                          messagesList: messagesList,
+                                        ),
                                       ],
                                     );
                                   } else if (messagesList[index].type ==
@@ -211,13 +185,17 @@ class _ChatPageState extends State<ChatPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        showName(index, messagesList),
+                                        ShowSenderName(
+                                          index: index,
+                                          messagesList: messagesList,
+                                        ),
                                         Row(
                                           children: [
                                             spaceBeforeMessage(
                                                 index, messagesList),
-                                            showSenderPhoto(
-                                                index, messagesList, 18),
+                                            ShowSenderPhoto(
+                                                index: index,
+                                                messagesList: messagesList),
                                             GestureDetector(
                                               onLongPress: () {
                                                 showMessageInformation(context,
@@ -244,7 +222,10 @@ class _ChatPageState extends State<ChatPage> {
                                             ),
                                           ],
                                         ),
-                                        showDate(index, messagesList),
+                                        ShowDate(
+                                          index: index,
+                                          messagesList: messagesList,
+                                        ),
                                       ],
                                     );
                                   } else {
@@ -252,13 +233,17 @@ class _ChatPageState extends State<ChatPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        showName(index, messagesList),
+                                        ShowSenderName(
+                                          index: index,
+                                          messagesList: messagesList,
+                                        ),
                                         Row(
                                           children: [
                                             spaceBeforeMessage(
                                                 index, messagesList),
-                                            showSenderPhoto(
-                                                index, messagesList, 18),
+                                            ShowSenderPhoto(
+                                                index: index,
+                                                messagesList: messagesList),
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 17,
@@ -284,7 +269,10 @@ class _ChatPageState extends State<ChatPage> {
                                             ),
                                           ],
                                         ),
-                                        showDate(index, messagesList),
+                                        ShowDate(
+                                          index: index,
+                                          messagesList: messagesList,
+                                        ),
                                       ],
                                     );
                                   }
@@ -294,67 +282,10 @@ class _ChatPageState extends State<ChatPage> {
                         Stack(
                           alignment: Alignment.centerRight,
                           children: [
-                            sendTextField(messages),
-                            FutureBuilder<Directory?>(
-                                future: getTemporaryDirectory(),
-                                builder: (context,
-                                    AsyncSnapshot<Directory?> snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.done) {
-                                    return SocialMediaRecorder(
-                                      storeSoundRecoringPath:
-                                          '${snapshot.data?.path}',
-                                      sendRequestFunction: (soundFile) async {
-                                        final file = File(soundFile.path);
-                                        final user =
-                                            FirebaseAuth.instance.currentUser;
-                                        final path =
-                                            'files/sounds/${user!.email}/${DateTime.now().toLocal().day}-${DateTime.now().toLocal().hour}-${DateTime.now().toLocal().minute}';
-                                        final ref = FirebaseStorage.instance
-                                            .ref()
-                                            .child(path);
-                                        UploadTask? uploadTask;
-                                        uploadTask = ref.putFile(file);
-                                        final snapshot = await uploadTask
-                                            .whenComplete(() {});
-                                        final urlDownload =
-                                            await snapshot.ref.getDownloadURL();
-                                        messages.add(
-                                          {
-                                            'message': urlDownload,
-                                            'date': DateTime.now(),
-                                            'id': user.email,
-                                            'name': user.displayName,
-                                            'uid': user.uid,
-                                            'type': 'voice',
-                                            'profilePhoto': user.photoURL,
-                                          },
-                                        );
-                                      },
-                                      encode: AudioEncoderType.AMR_NB,
-                                      recordIcon: Padding(
-                                        padding: const EdgeInsets.only(top: 8),
-                                        child: Icon(
-                                          Icons.keyboard_voice,
-                                          color: kSuperGreyColor,
-                                        ),
-                                      ),
-                                      recordIconWhenLockedRecord: Icon(
-                                        Icons.check,
-                                        color: kBlackColor,
-                                      ),
-                                      backGroundColor: kGreyColor,
-                                      recordIconBackGroundColor: Colors.red,
-                                      counterBackGroundColor: kGreyColor,
-                                      recordIconWhenLockBackGroundColor:
-                                          kGreyColor,
-                                      cancelTextBackGroundColor: kGreyColor,
-                                      lockButton: Icon(Icons.lock),
-                                    );
-                                  } else {
-                                    return Container();
-                                  }
-                                }),
+                            SendMessageTextField(
+                                messages: messages,
+                                collection: widget.collection),
+                            SendVoiceMessage(messages: messages),
                           ],
                         ),
                       ],
@@ -388,218 +319,6 @@ class _ChatPageState extends State<ChatPage> {
                 ? false
                 : true),
         child: SizedBox(width: 35));
-  }
-
-  showSenderPhoto(int index, List<Message> messagesList, double? size) {
-    return Visibility(
-      visible: (index == 0)
-          ? true
-          : (messagesList[index].uid == messagesList[index - 1].uid)
-              ? false
-              : true,
-      child: CircleAvatar(
-        backgroundColor: kSuperGreyColor,
-        radius: size,
-        child: CircleAvatar(
-          backgroundImage: (messagesList[index].profilePhoto == null ||
-                  messagesList[index].profilePhoto == '')
-              ? AssetImage(
-                  'assets/images/miniLogo.png',
-                )
-              : NetworkImage(messagesList[index].profilePhoto!)
-                  as ImageProvider,
-          backgroundColor: Colors.white,
-          radius: (size! - 1),
-        ),
-      ),
-    );
-  }
-
-  sendTextField(CollectionReference<Map<String, dynamic>> messages) {
-    return Flexible(
-      child: TextField(
-        controller: messageController,
-        onSubmitted: (data) {
-          if (messageController.text.trim() != '' &&
-              messageController.text.trim() != '') {
-            final user = FirebaseAuth.instance.currentUser;
-            messages.add(
-              {
-                'message': messageController.text,
-                'date': DateTime.now(),
-                'id': user!.email,
-                'name': user.displayName,
-                'uid': user.uid,
-                'type': 'text',
-                'profilePhoto': user.photoURL,
-              },
-            );
-            messageController.clear();
-            _messageController.animateTo(0,
-                duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-          }
-        },
-        style: GoogleFonts.lato(
-            textStyle: TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 20,
-          color: kBlackColor,
-        )),
-        cursorColor: kSuperGreyColor,
-        cursorHeight: 25,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: 20, top: 19.5, bottom: 19.5),
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          filled: true,
-          fillColor: kGreyColor,
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: kGreyColor),
-              borderRadius: BorderRadius.zero),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: kGreyColor),
-              borderRadius: BorderRadius.zero),
-          errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: kGreyColor),
-              borderRadius: BorderRadius.zero),
-          focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: kGreyColor),
-              borderRadius: BorderRadius.zero),
-          labelText: 'Type... in ${widget.collection}',
-          labelStyle: GoogleFonts.lato(
-              fontSize: 20,
-              color: kSuperGreyColor,
-              fontWeight: FontWeight.w800),
-          hintText: 'Type... in ${widget.collection}',
-          hintStyle: GoogleFonts.lato(
-              fontSize: 20,
-              color: kSuperGreyColor,
-              fontWeight: FontWeight.w800),
-          suffixIcon: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                onPressed: () async {
-                  XFile? image =
-                      await _picker.pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    final file = File(image.path);
-                    final user = FirebaseAuth.instance.currentUser;
-                    final path = 'files/images/${user!.email}/${image.name}';
-                    final ref = FirebaseStorage.instance.ref().child(path);
-                    UploadTask? uploadTask;
-                    uploadTask = ref.putFile(file);
-                    final snapshot = await uploadTask.whenComplete(() {});
-                    final urlDownload = await snapshot.ref.getDownloadURL();
-                    messages.add(
-                      {
-                        'message': urlDownload,
-                        'date': DateTime.now(),
-                        'id': user.email,
-                        'name': user.displayName,
-                        'uid': user.uid,
-                        'type': 'image',
-                        'profilePhoto': user.photoURL,
-                      },
-                    );
-                    //image = null;
-                  }
-                },
-                icon: Icon(
-                  Icons.image,
-                  color: kSuperGreyColor,
-                ),
-              ),
-              IconButton(
-                onPressed: () async {
-                  if (messageController.text.trim() != '' &&
-                      messageController.text.trim() != '') {
-                    final user = FirebaseAuth.instance.currentUser;
-                    messages.add(
-                      {
-                        'message': messageController.text,
-                        'date': DateTime.now(),
-                        'id': user!.email,
-                        'name': user.displayName,
-                        'uid': user.uid,
-                        'type': 'text',
-                        'profilePhoto': user.photoURL,
-                      },
-                    );
-                    messageController.clear();
-                    _messageController.animateTo(0,
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.easeIn);
-                  }
-                },
-                icon: Icon(
-                  Icons.send_rounded,
-                  color: kSuperGreyColor,
-                ),
-              ),
-              SizedBox(width: 35),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  showDate(int index, List<Message> messagesList) {
-    return Visibility(
-      visible: (index == 0)
-          ? true
-          : (messagesList[index].uid == messagesList[index - 1].uid)
-              ? false
-              : true,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: (index == 0)
-            ? Center(
-                child: DateChip(
-                  date: messagesList[index].date.toDate(),
-                  color: kGreyColor,
-                ),
-              )
-            : (messagesList[index].date.toDate().day ==
-                    messagesList[index - 1].date.toDate().day)
-                ? Center(
-                    child: Text(
-                      '${messagesList[index].date.toDate().toLocal().hour}:${messagesList[index].date.toDate().toLocal().minute}',
-                      style: GoogleFonts.lato(
-                          color: kSuperGreyColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  )
-                : Center(
-                    child: DateChip(
-                      date: messagesList[index].date.toDate(),
-                      color: kGreyColor,
-                    ),
-                  ),
-      ),
-    );
-  }
-
-  showName(int index, List<Message> messagesList) {
-    return Visibility(
-      visible: (index == messagesList.length - 1)
-          ? true
-          : (messagesList[index].uid == messagesList[index + 1].uid)
-              ? false
-              : true,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 55),
-        child: Text(
-          messagesList[index].name,
-          style: GoogleFonts.lato(
-              color: kSuperGreyColor,
-              fontSize: 13,
-              fontWeight: FontWeight.w600),
-        ),
-      ),
-    );
   }
 
   showMessageInformation(

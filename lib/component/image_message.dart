@@ -35,8 +35,8 @@ class ImageMessage extends StatelessWidget {
       },
       child: Padding(
         padding: EdgeInsets.only(
-            left: isSender ? 170 : 17,
-            right: isSender ? 17 : 130,
+            left: isSender ? 0 : 17,
+            right: isSender ? 17 : 0,
             bottom: 5,
             top: 5),
         child: ClipRRect(

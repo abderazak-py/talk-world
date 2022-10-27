@@ -2,6 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:talk_world/Screens/ForgotPassword.dart';
+import 'package:talk_world/Screens/Register.dart';
 import 'package:talk_world/component/consts.dart';
 import 'package:talk_world/component/custom_button.dart';
 import 'package:talk_world/component/custom_textfield.dart';
@@ -84,7 +86,10 @@ class _LoginState extends State<Login> {
                       SizedBox(height: h * .01),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, 'Forgot');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ForgotPassword()));
                         },
                         child: Text(
                           'Forgot Password?',
@@ -111,7 +116,10 @@ class _LoginState extends State<Login> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, registerPageRoute);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Register()));
                             },
                             child: Text(
                               'Register',
