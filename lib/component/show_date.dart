@@ -24,12 +24,12 @@ class ShowDate extends StatelessWidget {
         child: (index == 0)
             ? Center(
                 child: DateChip(
-                  date: messagesList[index].date.toDate(),
+                  date: messagesList[index].date.toDate().toLocal(),
                   color: kGreyColor,
                 ),
               )
-            : (messagesList[index].date.toDate().day ==
-                    messagesList[index - 1].date.toDate().day)
+            : (messagesList[index].date.toDate().toLocal().day ==
+                    messagesList[index - 1].date.toDate().toLocal().day)
                 ? Center(
                     child: Text(
                       '${messagesList[index].date.toDate().toLocal().hour}:${messagesList[index].date.toDate().toLocal().minute}',
@@ -41,7 +41,7 @@ class ShowDate extends StatelessWidget {
                   )
                 : Center(
                     child: DateChip(
-                      date: messagesList[index].date.toDate(),
+                      date: messagesList[index].date.toDate().toLocal(),
                       color: kGreyColor,
                     ),
                   ),

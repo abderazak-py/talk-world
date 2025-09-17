@@ -16,6 +16,7 @@ import '../component/send_voice_message.dart';
 import '../component/show_date.dart';
 import '../component/show_sender_name.dart';
 import '../component/show_sender_photo.dart';
+import '../component/space_before_message.dart';
 import '../models/message.dart';
 
 class ChatPage extends StatefulWidget {
@@ -70,6 +71,7 @@ class _ChatPageState extends State<ChatPage> {
                                 if (messagesList[index].uid == user!.uid) {
                                   if ((messagesList[index].type == 'image')) {
                                     return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         GestureDetector(
                                           onLongPress: () {
@@ -147,6 +149,7 @@ class _ChatPageState extends State<ChatPage> {
                                 } else {
                                   if ((messagesList[index].type == 'image')) {
                                     return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         ShowSenderName(
                                           index: index,
@@ -156,8 +159,9 @@ class _ChatPageState extends State<ChatPage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.end,
                                           children: [
-                                            spaceBeforeMessage(
-                                                index, messagesList),
+                                            SpaceBeforeMessage(
+                                                index: index,
+                                                messagesList: messagesList),
                                             ShowSenderPhoto(
                                                 index: index,
                                                 messagesList: messagesList),
@@ -191,8 +195,9 @@ class _ChatPageState extends State<ChatPage> {
                                         ),
                                         Row(
                                           children: [
-                                            spaceBeforeMessage(
-                                                index, messagesList),
+                                            SpaceBeforeMessage(
+                                                index: index,
+                                                messagesList: messagesList),
                                             ShowSenderPhoto(
                                                 index: index,
                                                 messagesList: messagesList),
@@ -239,15 +244,16 @@ class _ChatPageState extends State<ChatPage> {
                                         ),
                                         Row(
                                           children: [
-                                            spaceBeforeMessage(
-                                                index, messagesList),
+                                            SpaceBeforeMessage(
+                                                index: index,
+                                                messagesList: messagesList),
                                             ShowSenderPhoto(
                                                 index: index,
                                                 messagesList: messagesList),
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 17,
-                                                  right: 150,
+                                                 // right: 150,
                                                   bottom: 5),
                                               child: GestureDetector(
                                                 onLongPress: () {
@@ -309,16 +315,6 @@ class _ChatPageState extends State<ChatPage> {
         }
       },
     );
-  }
-
-  spaceBeforeMessage(int index, List<Message> messagesList) {
-    return Visibility(
-        visible: !((index == 0)
-            ? true
-            : (messagesList[index].uid == messagesList[index - 1].uid)
-                ? false
-                : true),
-        child: SizedBox(width: 35));
   }
 
   showMessageInformation(

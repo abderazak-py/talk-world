@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:talk_world/Screens/ChatPage.dart';
+import 'package:talk_world/Screens/chat_page.dart';
+import 'package:talk_world/Screens/login_page.dart';
 import 'package:talk_world/component/room_card.dart';
 import '../component/consts.dart';
 
@@ -55,6 +56,10 @@ class WorldsList extends StatelessWidget {
                     TextButton(
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
+                          Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Login()));
                         },
                         child: Text(
                           'SignOut',
@@ -68,26 +73,20 @@ class WorldsList extends StatelessWidget {
                   child: ListView(
                     children: const [
                       RoomCard(
-                          path: 'assets/images/gaming.jpg',
+                          path: 'assets/images/programing.jpg',
                           roomRoute: ChatPage(
-                            collection: 'gaming',
+                            collection: 'programing',
                           )),
                       RoomCard(
-                        path: 'assets/images/anime.jpg',
+                        path: 'assets/images/hardware.jpg',
                         roomRoute: ChatPage(
-                          collection: 'anime',
+                          collection: 'hardware',
                         ),
                       ),
                       RoomCard(
-                        path: 'assets/images/series.jpg',
+                        path: 'assets/images/books.jpg',
                         roomRoute: ChatPage(
-                          collection: 'series',
-                        ),
-                      ),
-                      RoomCard(
-                        path: 'assets/images/movies.jpg',
-                        roomRoute: ChatPage(
-                          collection: 'movies',
+                          collection: 'books',
                         ),
                       ),
                     ],

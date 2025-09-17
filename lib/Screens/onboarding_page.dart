@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:talk_world/Screens/Login.dart';
-import 'package:talk_world/component/OnboardingPage.dart';
+import 'package:talk_world/Screens/login_page.dart';
+import 'package:talk_world/component/onboarding_picture.dart';
 import 'package:talk_world/component/custom_button.dart';
 
 class OnboardingPage extends StatefulWidget {

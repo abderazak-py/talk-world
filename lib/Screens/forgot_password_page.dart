@@ -6,7 +6,7 @@ import 'package:talk_world/component/consts.dart';
 import 'package:talk_world/component/custom_button.dart';
 import 'package:talk_world/component/custom_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../component/Utils.dart';
+import '../component/utils.dart';
 import '../main.dart';
 
 class ForgotPassword extends StatefulWidget {

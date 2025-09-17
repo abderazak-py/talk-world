@@ -33,7 +33,7 @@ class SendMessageTextField extends StatelessWidget {
             messages.add(
               {
                 'message': messageController.text,
-                'date': DateTime.now(),
+                'date': DateTime.now().toUtc(),
                 'id': user!.email,
                 'name': user.displayName,
                 'uid': user.uid,
@@ -45,7 +45,7 @@ class SendMessageTextField extends StatelessWidget {
           } else {
             if (!mounted) return;
             showTopSnackBar(
-              context,
+              context as OverlayState,
               CustomSnackBar.error(
                 message:
                     "Oh! There's no internet connection. Please check your internet and try again",
@@ -110,7 +110,7 @@ class SendMessageTextField extends StatelessWidget {
                     messages.add(
                       {
                         'message': urlDownload,
-                        'date': DateTime.now(),
+                        'date': DateTime.now().toUtc(),
                         'id': user.email,
                         'name': user.displayName,
                         'uid': user.uid,
@@ -122,7 +122,7 @@ class SendMessageTextField extends StatelessWidget {
                 } else {
                   if (!mounted) return;
                   showTopSnackBar(
-                    context,
+                    context as OverlayState,
                     CustomSnackBar.error(
                       message:
                           "Oh! There's no internet connection. Please check your internet and try again",
@@ -145,7 +145,7 @@ class SendMessageTextField extends StatelessWidget {
                     messages.add(
                       {
                         'message': messageController.text,
-                        'date': DateTime.now(),
+                        'date': DateTime.now().toUtc(),
                         'id': user!.email,
                         'name': user.displayName,
                         'uid': user.uid,
@@ -157,7 +157,7 @@ class SendMessageTextField extends StatelessWidget {
                   } else {
                     if (!mounted) return;
                     showTopSnackBar(
-                      context,
+                      context as OverlayState,
                       CustomSnackBar.error(
                         message:
                             "Oh! There's no internet connection. Please check your internet and try again",

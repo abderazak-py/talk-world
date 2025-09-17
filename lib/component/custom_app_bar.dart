@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../Screens/ProfilePage.dart';
+import '../Screens/profile_page.dart';
 import 'consts.dart';
 
 class CustomAppBar extends StatelessWidget {

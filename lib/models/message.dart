@@ -9,7 +9,7 @@ class Message {
   final String type;
   final String? profilePhoto;
 
-  Message(this.message, this.id, this.name, this.uid, this.date, this.type,
+  Message(this.message, this.id, this.name, this.uid, this.date, this.type, 
       this.profilePhoto);
 
   factory Message.fromJson(jsonData) {

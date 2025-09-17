@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:talk_world/Screens/ForgotPassword.dart';
-import 'package:talk_world/Screens/Login.dart';
-import 'package:talk_world/Screens/Onboarding.dart';
+import 'package:talk_world/Screens/forgot_password_page.dart';
+import 'package:talk_world/Screens/login_page.dart';
+import 'package:talk_world/Screens/onboarding_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:talk_world/Screens/ProfilePage.dart';
-import 'package:talk_world/Screens/Register.dart';
-import 'package:talk_world/Screens/WorldsList.dart';
+import 'package:talk_world/Screens/profile_page.dart';
+import 'package:talk_world/Screens/register_page.dart';
+import 'package:talk_world/Screens/rooms_list_page.dart';
 import 'package:talk_world/component/consts.dart';
 import 'firebase_options.dart';
 
